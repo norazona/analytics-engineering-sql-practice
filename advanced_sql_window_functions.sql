@@ -10,14 +10,21 @@ SELECT
 FROM Dimension.Customer;
 
 -- 2. Find the top 3 orders by total excluding tax for each salesperson in the Fact.Orders table
+SELECT *
+FROM Fact.Orders;
+
 WITH rank_order AS (
 	SELECT 
 		[WWI Order ID] AS Order_ID,
+		de.[Employee] AS Salesperson,
 		Quantity * [Unit Price] AS OrderTotal,
-		ROW_NUMBER() OVER(ORDER BY Quantity * [Unit Price] DESC) AS Order_Rank
-	FROM Fact.Orders
+		ROW_NUMBER() OVER(PARTITION BY [Salesperson Key] ORDER BY Quantity * [Unit Price] DESC) AS Order_Rank
+	FROM Fact.Orders fo
+	JOIN Dimension.Employee de
+		ON fo.[Salesperson Key] = de.[Employee Key]
 )
 SELECT 
+	Salesperson
 	Order_ID,
 	OrderTotal,
 	Order_Rank
