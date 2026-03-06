@@ -10,7 +10,7 @@ SELECT
         PARTITION BY YEAR([Invoice Date Key]) 
         ORDER BY [Invoice Date Key]
     ) AS RunningTotalByYear
-FROM [Fact].[Sale]
+FROM Fact.Sale
 GROUP BY [Invoice Date Key]
 ORDER BY [Invoice Date Key];
 
